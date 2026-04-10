@@ -34,3 +34,21 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+  no_comments_check:
+    runs-on: ubuntu-latest
+    needs: build   # 👈 runs after build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for TODO/FIXME comments
+        run: |
+          echo "Checking for unwanted comments..."
+
+          if grep -rE "TODO|FIXME" --include="*.py" .; then
+            echo "❌ Found TODO/FIXME comments. Failing workflow."
+            exit 1
+          else
+            echo "✅ No unwanted comments found."
+          fi
